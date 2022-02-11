@@ -26,11 +26,9 @@ export default function App() {
   return (
     <AppContainer>
       <header>SHOPPING LIST</header>
-      <Searchbar />
+      <Searchbar items={items} />
     </AppContainer>
   );
-
-  function showSearchResults() {}
 }
 
 const AppContainer = styled.main`
