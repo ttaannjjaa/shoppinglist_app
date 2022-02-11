@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
+import Searchbar from './Searchbar';
 
 export default function App() {
   const [items, updateItems] = useImmer([]);
@@ -25,8 +26,11 @@ export default function App() {
   return (
     <AppContainer>
       <header>SHOPPING LIST</header>
+      <Searchbar />
     </AppContainer>
   );
+
+  function showSearchResults() {}
 }
 
 const AppContainer = styled.main`
