@@ -46,7 +46,9 @@ export default function Searchbar({ items }) {
     const input = event.target.value.trim().toLowerCase();
     setUserInput(input);
     updateSearchResults(
-      itemNames.filter(item => item.toLowerCase().includes(input))
+      itemNames
+        .filter(item => item.toLowerCase().includes(input))
+        .filter(item => !activeItems.includes(item))
     );
   }
 
@@ -55,6 +57,8 @@ export default function Searchbar({ items }) {
     event.preventDefault();
     const item = event.target.value;
     updateActiveItems([...activeItems, item]);
+    setUserInput('');
+    updateSearchResults([]);
   }
 }
 
