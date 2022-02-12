@@ -12,8 +12,15 @@ export default function Searchbar({ items }) {
   return (
     <SearchContainer>
       <ShoppingListContainer>
-        {activeItems.map((activeItem, index) => (
-          <ShoppingItem key={index}>{activeItem}</ShoppingItem>
+        {activeItems.map((activeItem, toremoveItem) => (
+          <ShoppingItem
+            key={activeItem}
+            activeItem={activeItem}
+            toremoveItem={toremoveItem}
+            onClick={removeFromActiveItems}
+          >
+            {activeItem}
+          </ShoppingItem>
         ))}
       </ShoppingListContainer>
       <label htmlFor="searchfield" name="searchfield">
@@ -60,8 +67,18 @@ export default function Searchbar({ items }) {
     setUserInput('');
     updateSearchResults([]);
   }
-}
 
+  function removeFromActiveItems(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const toremoveItem = event.target.innerText;
+    const indexOfToRemoveItem = activeItems.indexOf(toremoveItem);
+    updateActiveItems([
+      ...activeItems.slice(0, indexOfToRemoveItem),
+      ...activeItems.slice(indexOfToRemoveItem + 1),
+    ]);
+  }
+}
 const SearchContainer = styled.form`
   display: grid;
   gap: 10px;
@@ -93,13 +110,13 @@ const ShoppingListContainer = styled.ul`
   flex-wrap: wrap;
 `;
 
-const ShoppingItem = styled.li`
+const ShoppingItem = styled.button`
   border: 1px solid black;
   padding: 4px;
   margin: 2px;
   width: max-content;
   border-radius: 10px;
-  background-color: papayawhip;
+  background-color: lightblue;
 `;
 
 // function getSearchResults(event) {
@@ -113,4 +130,50 @@ const ShoppingItem = styled.li`
 //       : rawResults
 //   );
 
-//onClick={removeFromActiveItems}
+//updateActiveItems(delete activeItems[activeItems.IndexOf(toremoveitem)]);
+
+// updateActiveItems([...activeItems]);
+// console.log(activeItems);
+//console.log(activeItems.includes(toremoveItem));
+//console.log(!activeItems.includes(toremoveItem));
+// setRooms([
+//   ...rooms.slice(0, index),
+//   { ...rooms[index], isClean: !isClean },
+//   ...rooms.slice(index + 1),
+// ]);
+
+// updateActiveItems(
+//   activeItems.filter(activeItem => !indexOfToRemoveItem && activeItem)
+// );
+// updateActiveItems([...activeItems]);
+
+// updateActiveItems(
+//   activeItems.filter(toremoveItem => !activeItems.includes(toremoveItem))
+
+// updateSearchResults(
+//   itemNames
+//     .filter(item => item.toLowerCase().includes(input))
+//     .filter(item => !activeItems.includes(item))
+// updateActiveItems(
+//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
+// updateActiveItems(
+//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
+// );
+// console.log(activeItems);
+
+// setRooms([
+//   ...rooms.slice(0, index),
+//   { ...rooms[index], isClean: !isClean },
+//   ...rooms.slice(index + 1),
+// ]);
+
+// updateActiveItems(activeItems.filter(activeItem => activeItem.value !== toremoveItem));
+// console.log(activeItems);
+
+// function excludeAssistant() {
+//   if (activeitem.value !== toremoveitem) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
