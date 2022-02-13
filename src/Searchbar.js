@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
+
   const [activeItems, updateActiveItems] = useImmer([]);
 
   const itemNames = items.map(item => item.name.de);
@@ -12,8 +13,15 @@ export default function Searchbar({ items }) {
   return (
     <SearchContainer>
       <ShoppingListContainer>
-        {activeItems.map((activeItem, index) => (
-          <ShoppingItem key={index}>{activeItem}</ShoppingItem>
+        {activeItems.map((activeItem, toremoveItem) => (
+          <ShoppingItem
+            key={activeItem}
+            activeItem={activeItem}
+            toremoveItem={toremoveItem}
+            onClick={removeFromActiveItems}
+          >
+            {activeItem}
+          </ShoppingItem>
         ))}
       </ShoppingListContainer>
       <label htmlFor="searchfield" name="searchfield">
@@ -39,6 +47,12 @@ export default function Searchbar({ items }) {
           </ListItem>
         ))}
       </ListContainer>
+      {userInput.length > 0 && searchResults.length === 0 && (
+        <p>
+          We could not find what you are looking for. For that we are truly
+          sorry
+        </p>
+      )}
     </SearchContainer>
   );
 
@@ -59,6 +73,17 @@ export default function Searchbar({ items }) {
     updateActiveItems([...activeItems, item]);
     setUserInput('');
     updateSearchResults([]);
+  }
+
+  function removeFromActiveItems(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const toremoveItem = event.target.innerText;
+    const indexOfToRemoveItem = activeItems.indexOf(toremoveItem);
+    updateActiveItems([
+      ...activeItems.slice(0, indexOfToRemoveItem),
+      ...activeItems.slice(indexOfToRemoveItem + 1),
+    ]);
   }
 }
 
@@ -93,13 +118,21 @@ const ShoppingListContainer = styled.ul`
   flex-wrap: wrap;
 `;
 
-const ShoppingItem = styled.li`
+const ShoppingItem = styled.button`
   border: 1px solid black;
   padding: 4px;
   margin: 2px;
   width: max-content;
   border-radius: 10px;
-  background-color: papayawhip;
+  background-color: lightblue;
+`;
+
+const Excuse = styled.p`
+  color: yellowgreen;
+
+  .hidden {
+    display: none;
+  }
 `;
 
 // function getSearchResults(event) {
@@ -113,4 +146,70 @@ const ShoppingItem = styled.li`
 //       : rawResults
 //   );
 
-//onClick={removeFromActiveItems}
+//updateActiveItems(delete activeItems[activeItems.IndexOf(toremoveitem)]);
+
+// updateActiveItems([...activeItems]);
+// console.log(activeItems);
+//console.log(activeItems.includes(toremoveItem));
+//console.log(!activeItems.includes(toremoveItem));
+// setRooms([
+//   ...rooms.slice(0, index),
+//   { ...rooms[index], isClean: !isClean },
+//   ...rooms.slice(index + 1),
+// ]);
+
+// updateActiveItems(
+//   activeItems.filter(activeItem => !indexOfToRemoveItem && activeItem)
+// );
+// updateActiveItems([...activeItems]);
+
+// updateActiveItems(
+//   activeItems.filter(toremoveItem => !activeItems.includes(toremoveItem))
+
+// updateSearchResults(
+//   itemNames
+//     .filter(item => item.toLowerCase().includes(input))
+//     .filter(item => !activeItems.includes(item))
+// updateActiveItems(
+//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
+// updateActiveItems(
+//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
+// );
+// console.log(activeItems);
+
+// updateActiveItems(activeItems.filter(activeItem => activeItem.value !== toremoveItem));
+// console.log(activeItems);
+
+// function excludeAssistant() {
+//   if (activeitem.value !== toremoveitem) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+
+//hidden={
+// userInput.length > 0 && searchResults.length > 0 ? 'hidden' : ''
+// }
+//
+//
+/*{<ShowExcuse searchResults={false}></ShowExcuse>
+function ShowExcuse(
+  updateSearchResults,
+  userInput,
+  setUserInput,
+  searchResults
+) {
+  const nothingFound = searchResults;
+  console.log(nothingFound);
+  if (userInput && !nothingFound) {
+    setUserInput('');
+    updateSearchResults([]);
+    return (
+      <p>
+        We could not find what you are looking for. For that we are truly
+        sorry
+      </p>
+    );
+  }
+}} */
