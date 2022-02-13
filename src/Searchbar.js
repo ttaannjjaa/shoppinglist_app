@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
@@ -47,17 +47,12 @@ export default function Searchbar({ items }) {
           </ListItem>
         ))}
       </ListContainer>
-      {
-        (useEffect(function showExcuse() {
-          searchResults === [] && (
-            <Excuse>
-              We could not find what you are looking for. For that we are truly
-              sorry
-            </Excuse>
-          );
-        }),
-        [userInput])
-      }
+      {userInput.length > 0 && searchResults.length === 0 && (
+        <p>
+          We could not find what you are looking for. For that we are truly
+          sorry
+        </p>
+      )}
     </SearchContainer>
   );
 
@@ -196,3 +191,25 @@ const Excuse = styled.p`
 //hidden={
 // userInput.length > 0 && searchResults.length > 0 ? 'hidden' : ''
 // }
+//
+//
+/*{<ShowExcuse searchResults={false}></ShowExcuse>
+function ShowExcuse(
+  updateSearchResults,
+  userInput,
+  setUserInput,
+  searchResults
+) {
+  const nothingFound = searchResults;
+  console.log(nothingFound);
+  if (userInput && !nothingFound) {
+    setUserInput('');
+    updateSearchResults([]);
+    return (
+      <p>
+        We could not find what you are looking for. For that we are truly
+        sorry
+      </p>
+    );
+  }
+}} */
