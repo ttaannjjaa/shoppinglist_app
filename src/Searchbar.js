@@ -42,16 +42,17 @@ export default function Searchbar({ items }) {
         value={userInput}
       ></input>
       <ListContainer>
-        {searchResults.map((searchResult, index) => (
-          <ListItem
-            onClick={addToActiveItems}
-            key={index}
-            searchResult={searchResult}
-            value={searchResult}
-          >
-            {searchResult}
-          </ListItem>
-        ))}
+        {userInput.length > 0 &&
+          searchResults.map((searchResult, index) => (
+            <ListItem
+              onClick={addToActiveItems}
+              key={index}
+              searchResult={searchResult}
+              value={searchResult}
+            >
+              {searchResult}
+            </ListItem>
+          ))}
       </ListContainer>
       {userInput.length > 0 && searchResults.length === 0 && (
         <p>
