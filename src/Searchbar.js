@@ -6,6 +6,11 @@ export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
 
+  const itemNames = items.map(item => item.name.de);
+  //const { Searcher } = require('fast-fuzzy');
+  //const searcher = new Searcher(itemNames, { ignoreCase: true });
+  //updateSearchResults(searcher.search(userInput));
+
   const [activeItems, updateActiveItems] = useImmer(
     loadFromLocal('activeItems') ?? []
   );
@@ -13,8 +18,6 @@ export default function Searchbar({ items }) {
   useEffect(() => {
     saveToLocal('activeItems', activeItems);
   }, [activeItems]);
-
-  const itemNames = items.map(item => item.name.de);
 
   return (
     <SearchContainer>
