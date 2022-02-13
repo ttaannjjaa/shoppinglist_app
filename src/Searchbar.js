@@ -1,14 +1,23 @@
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
 
-  const [activeItems, updateActiveItems] = useImmer([]);
-
   const itemNames = items.map(item => item.name.de);
+  //const { Searcher } = require('fast-fuzzy');
+  //const searcher = new Searcher(itemNames, { ignoreCase: true });
+  //updateSearchResults(searcher.search(userInput));
+
+  const [activeItems, updateActiveItems] = useImmer(
+    loadFromLocal('activeItems') ?? []
+  );
+
+  useEffect(() => {
+    saveToLocal('activeItems', activeItems);
+  }, [activeItems]);
 
   return (
     <SearchContainer>
@@ -36,16 +45,17 @@ export default function Searchbar({ items }) {
         value={userInput}
       ></input>
       <ListContainer>
-        {searchResults.map((searchResult, index) => (
-          <ListItem
-            onClick={addToActiveItems}
-            key={index}
-            searchResult={searchResult}
-            value={searchResult}
-          >
-            {searchResult}
-          </ListItem>
-        ))}
+        {userInput.length > 0 &&
+          searchResults.map((searchResult, index) => (
+            <ListItem
+              onClick={addToActiveItems}
+              key={index}
+              searchResult={searchResult}
+              value={searchResult}
+            >
+              {searchResult}
+            </ListItem>
+          ))}
       </ListContainer>
       {userInput.length > 0 && searchResults.length === 0 && (
         <p>
@@ -84,6 +94,18 @@ export default function Searchbar({ items }) {
       ...activeItems.slice(0, indexOfToRemoveItem),
       ...activeItems.slice(indexOfToRemoveItem + 1),
     ]);
+  }
+
+  function loadFromLocal(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function saveToLocal(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
   }
 }
 
