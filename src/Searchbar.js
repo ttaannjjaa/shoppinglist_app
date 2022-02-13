@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
+
   const [activeItems, updateActiveItems] = useImmer([]);
 
   const itemNames = items.map(item => item.name.de);
@@ -46,6 +47,17 @@ export default function Searchbar({ items }) {
           </ListItem>
         ))}
       </ListContainer>
+      {
+        (useEffect(function showExcuse() {
+          searchResults === [] && (
+            <Excuse>
+              We could not find what you are looking for. For that we are truly
+              sorry
+            </Excuse>
+          );
+        }),
+        [userInput])
+      }
     </SearchContainer>
   );
 
@@ -79,6 +91,7 @@ export default function Searchbar({ items }) {
     ]);
   }
 }
+
 const SearchContainer = styled.form`
   display: grid;
   gap: 10px;
@@ -117,6 +130,14 @@ const ShoppingItem = styled.button`
   width: max-content;
   border-radius: 10px;
   background-color: lightblue;
+`;
+
+const Excuse = styled.p`
+  color: yellowgreen;
+
+  .hidden {
+    display: none;
+  }
 `;
 
 // function getSearchResults(event) {
@@ -161,12 +182,6 @@ const ShoppingItem = styled.button`
 // );
 // console.log(activeItems);
 
-// setRooms([
-//   ...rooms.slice(0, index),
-//   { ...rooms[index], isClean: !isClean },
-//   ...rooms.slice(index + 1),
-// ]);
-
 // updateActiveItems(activeItems.filter(activeItem => activeItem.value !== toremoveItem));
 // console.log(activeItems);
 
@@ -176,4 +191,8 @@ const ShoppingItem = styled.button`
 //   } else {
 //     return false;
 //   }
+// }
+
+//hidden={
+// userInput.length > 0 && searchResults.length > 0 ? 'hidden' : ''
 // }
