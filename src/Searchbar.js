@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Searchbar({ items }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
 
-  const [activeItems, updateActiveItems] = useImmer([]);
+  const [activeItems, updateActiveItems] = useImmer(
+    loadFromLocal('activeItems') ?? []
+  );
+
+  useEffect(() => {
+    saveToLocal('activeItems', activeItems);
+  }, [activeItems]);
 
   const itemNames = items.map(item => item.name.de);
 
@@ -84,6 +90,18 @@ export default function Searchbar({ items }) {
       ...activeItems.slice(0, indexOfToRemoveItem),
       ...activeItems.slice(indexOfToRemoveItem + 1),
     ]);
+  }
+
+  function loadFromLocal(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function saveToLocal(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
   }
 }
 
