@@ -1,4 +1,3 @@
-//import './App.css';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
@@ -21,6 +20,7 @@ export default function App() {
       updateItems(results.data);
     } catch (error) {
       setHasError(true);
+      console.log(hasError);
     }
   }
   return (
@@ -39,5 +39,6 @@ const AppContainer = styled.main`
 
   header {
     font-size: 1.5rem;
+    text-align: center;
   }
 `;

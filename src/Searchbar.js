@@ -7,9 +7,8 @@ export default function Searchbar({ items }) {
   const [userInput, setUserInput] = useState('');
 
   const itemNames = items.map(item => item.name.de);
-  //const { Searcher } = require('fast-fuzzy');
-  //const searcher = new Searcher(itemNames, { ignoreCase: true });
-  //updateSearchResults(searcher.search(userInput));
+  const { Searcher } = require('fast-fuzzy');
+  const searcher = new Searcher(itemNames, { ignoreCase: true });
 
   const [activeItems, updateActiveItems] = useImmer(
     loadFromLocal('activeItems') ?? []
@@ -70,9 +69,7 @@ export default function Searchbar({ items }) {
     const input = event.target.value.trim().toLowerCase();
     setUserInput(input);
     updateSearchResults(
-      itemNames
-        .filter(item => item.toLowerCase().includes(input))
-        .filter(item => !activeItems.includes(item))
+      searcher.search(userInput).filter(item => !activeItems.includes(item))
     );
   }
 
@@ -148,90 +145,3 @@ const ShoppingItem = styled.button`
   border-radius: 10px;
   background-color: lightblue;
 `;
-
-const Excuse = styled.p`
-  color: yellowgreen;
-
-  .hidden {
-    display: none;
-  }
-`;
-
-// function getSearchResults(event) {
-//   const userInput = event.target.value.trim().toLowerCase();
-//   const rawResults = items.filter(item =>
-//     item.name.de.toLowerCase().includes(userInput)
-//   );
-//   updateSearchResults(
-//     !event.target.value && rawResults === []
-//       ? { name: { de: 'We could not find what you are looking for.' } }
-//       : rawResults
-//   );
-
-//updateActiveItems(delete activeItems[activeItems.IndexOf(toremoveitem)]);
-
-// updateActiveItems([...activeItems]);
-// console.log(activeItems);
-//console.log(activeItems.includes(toremoveItem));
-//console.log(!activeItems.includes(toremoveItem));
-// setRooms([
-//   ...rooms.slice(0, index),
-//   { ...rooms[index], isClean: !isClean },
-//   ...rooms.slice(index + 1),
-// ]);
-
-// updateActiveItems(
-//   activeItems.filter(activeItem => !indexOfToRemoveItem && activeItem)
-// );
-// updateActiveItems([...activeItems]);
-
-// updateActiveItems(
-//   activeItems.filter(toremoveItem => !activeItems.includes(toremoveItem))
-
-// updateSearchResults(
-//   itemNames
-//     .filter(item => item.toLowerCase().includes(input))
-//     .filter(item => !activeItems.includes(item))
-// updateActiveItems(
-//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
-// updateActiveItems(
-//   activeItems.filter(activeItem => activeItem.value != toremoveItem)
-// );
-// console.log(activeItems);
-
-// updateActiveItems(activeItems.filter(activeItem => activeItem.value !== toremoveItem));
-// console.log(activeItems);
-
-// function excludeAssistant() {
-//   if (activeitem.value !== toremoveitem) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-
-//hidden={
-// userInput.length > 0 && searchResults.length > 0 ? 'hidden' : ''
-// }
-//
-//
-/*{<ShowExcuse searchResults={false}></ShowExcuse>
-function ShowExcuse(
-  updateSearchResults,
-  userInput,
-  setUserInput,
-  searchResults
-) {
-  const nothingFound = searchResults;
-  console.log(nothingFound);
-  if (userInput && !nothingFound) {
-    setUserInput('');
-    updateSearchResults([]);
-    return (
-      <p>
-        We could not find what you are looking for. For that we are truly
-        sorry
-      </p>
-    );
-  }
-}} */
