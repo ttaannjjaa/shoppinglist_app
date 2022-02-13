@@ -1,4 +1,4 @@
-##Contributors group project: Jelena, Tanja, Henning, Mirco
+## Contributors group project: Jelena, Tanja, Henning, Mirco
 
 # Getting Started with Create React App
 
