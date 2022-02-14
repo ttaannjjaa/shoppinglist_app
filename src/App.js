@@ -1,37 +1,14 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { useImmer } from 'use-immer';
+import useFetch from './hooks/useFetch.js';
 import Searchbar from './Searchbar';
 import Shoppinglist from './Shoppinglist';
+import useLocalStorage from './hooks/useLocalStorage.js';
 
 export default function App() {
-  const [items, updateItems] = useImmer([]);
-  const [hasError, setHasError] = useState(false);
+  const [items] = useFetch();
 
-  const [activeItems, updateActiveItems] = useImmer(
-    loadFromLocal('activeItems') ?? []
-  );
+  const [activeItems, updateActiveItems] = useLocalStorage('activeItems', []);
 
-  useEffect(() => {
-    saveToLocal('activeItems', activeItems);
-  }, [activeItems]);
-
-  useEffect(() => {
-    loadItems();
-  }, []);
-
-  async function loadItems() {
-    try {
-      const response = await fetch(
-        'https://fetch-me.vercel.app/api/shopping/items'
-      );
-      const results = await response.json();
-      updateItems(results.data);
-    } catch (error) {
-      setHasError(true);
-      console.log(hasError);
-    }
-  }
   return (
     <AppContainer>
       <header>SHOPPING LIST</header>
@@ -46,18 +23,6 @@ export default function App() {
       />
     </AppContainer>
   );
-
-  function loadFromLocal(key) {
-    try {
-      return JSON.parse(localStorage.getItem(key));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  function saveToLocal(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-  }
 }
 
 const AppContainer = styled.main`
