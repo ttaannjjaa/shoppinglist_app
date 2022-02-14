@@ -2,10 +2,19 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
 import Searchbar from './Searchbar';
+import Shoppinglist from './Shoppinglist';
 
 export default function App() {
   const [items, updateItems] = useImmer([]);
   const [hasError, setHasError] = useState(false);
+
+  const [activeItems, updateActiveItems] = useImmer(
+    loadFromLocal('activeItems') ?? []
+  );
+
+  useEffect(() => {
+    saveToLocal('activeItems', activeItems);
+  }, [activeItems]);
 
   useEffect(() => {
     loadItems();
@@ -26,9 +35,29 @@ export default function App() {
   return (
     <AppContainer>
       <header>SHOPPING LIST</header>
-      <Searchbar items={items} />
+      <Shoppinglist
+        updateActiveItems={updateActiveItems}
+        activeItems={activeItems}
+      />
+      <Searchbar
+        items={items}
+        activeItems={activeItems}
+        updateActiveItems={updateActiveItems}
+      />
     </AppContainer>
   );
+
+  function loadFromLocal(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function saveToLocal(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
 }
 
 const AppContainer = styled.main`

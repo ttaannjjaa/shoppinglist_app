@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-export default function Searchbar({ items }) {
+export default function Searchbar({ items, updateActiveItems, activeItems }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
 
@@ -10,28 +10,8 @@ export default function Searchbar({ items }) {
   const { Searcher } = require('fast-fuzzy');
   const searcher = new Searcher(itemNames, { ignoreCase: true });
 
-  const [activeItems, updateActiveItems] = useImmer(
-    loadFromLocal('activeItems') ?? []
-  );
-
-  useEffect(() => {
-    saveToLocal('activeItems', activeItems);
-  }, [activeItems]);
-
   return (
     <SearchContainer>
-      <ShoppingListContainer>
-        {activeItems.map((activeItem, toremoveItem) => (
-          <ShoppingItem
-            key={activeItem}
-            activeItem={activeItem}
-            toremoveItem={toremoveItem}
-            onClick={removeFromActiveItems}
-          >
-            {activeItem}
-          </ShoppingItem>
-        ))}
-      </ShoppingListContainer>
       <label htmlFor="searchfield" name="searchfield">
         What do you want to buy?
       </label>
@@ -81,29 +61,6 @@ export default function Searchbar({ items }) {
     setUserInput('');
     updateSearchResults([]);
   }
-
-  function removeFromActiveItems(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    const toremoveItem = event.target.innerText;
-    const indexOfToRemoveItem = activeItems.indexOf(toremoveItem);
-    updateActiveItems([
-      ...activeItems.slice(0, indexOfToRemoveItem),
-      ...activeItems.slice(indexOfToRemoveItem + 1),
-    ]);
-  }
-
-  function loadFromLocal(key) {
-    try {
-      return JSON.parse(localStorage.getItem(key));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  function saveToLocal(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-  }
 }
 
 const SearchContainer = styled.form`
@@ -116,9 +73,8 @@ const SearchContainer = styled.form`
   }
 `;
 
-const ListContainer = styled.ul`
+const ListContainer = styled.section`
   display: flex;
-  list-style: none;
   flex-wrap: wrap;
 `;
 
@@ -129,19 +85,4 @@ const ListItem = styled.button`
   width: max-content;
   border-radius: 10px;
   background-color: papayawhip;
-`;
-
-const ShoppingListContainer = styled.ul`
-  display: flex;
-  list-style: none;
-  flex-wrap: wrap;
-`;
-
-const ShoppingItem = styled.button`
-  border: 1px solid black;
-  padding: 4px;
-  margin: 2px;
-  width: max-content;
-  border-radius: 10px;
-  background-color: lightblue;
 `;
