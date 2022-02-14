@@ -13,7 +13,7 @@ export default function Searchbar({ items, updateActiveItems, activeItems }) {
   return (
     <SearchContainer>
       <label htmlFor="searchfield" name="searchfield">
-        What do you want to buy?
+        What do you want to buy today?
       </label>
       <input
         id="searchfield"
