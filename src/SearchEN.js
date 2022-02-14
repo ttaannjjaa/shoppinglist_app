@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import { useImmer } from 'use-immer';
 import { useState } from 'react';
 
-export default function Searchbar({ items, updateActiveItems, activeItems }) {
+export default function SearchEN({ items, updateActiveItems, activeItems }) {
   const [searchResults, updateSearchResults] = useImmer([]);
   const [userInput, setUserInput] = useState('');
 
-  const itemNames = items.map(item => item.name.de);
+  const itemNamesEN = items.map(item => item.name.en);
   const { Searcher } = require('fast-fuzzy');
-  const searcher = new Searcher(itemNames, { ignoreCase: true });
+  const searcher = new Searcher(itemNamesEN, { ignoreCase: true });
 
   return (
     <SearchContainer>
